@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CineFacil</title>
+
+  <title>CineFácil</title>
 
   <style>
     body {
@@ -60,6 +61,7 @@
       border-radius: 10px;
       font-size: 16px;
       font-weight: bold;
+      cursor: pointer;
     }
 
     #resultado {
@@ -72,6 +74,15 @@
       border-radius: 14px;
       padding: 18px;
       margin-bottom: 15px;
+      display: flex;
+      gap: 15px;
+    }
+
+    .filme img {
+      width: 100px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
     }
 
     .filme h2 {
@@ -81,13 +92,24 @@
     .nota {
       color: #ffd000;
     }
+
+    .carregando {
+      text-align: center;
+      color: #aaa;
+    }
+
+    .erro {
+      text-align: center;
+      color: #ff6b6b;
+    }
   </style>
 </head>
 
 <body>
 
 <header>
-  <div class="logo">Cine<span>Facil</span></div>
+  <div class="logo">Cine<span>Fácil</span></div>
+
   <div class="subtitulo">
     Descubra filmes, informações e trailers
   </div>
@@ -101,61 +123,121 @@
     id="pesquisa"
     type="text"
     placeholder="Digite o nome de um filme..."
+    onkeydown="if(event.key === 'Enter') buscar()"
   >
 
   <button onclick="buscar()">
     Buscar
   </button>
 
-  <div id="resultado">
-
-    <div class="filme">
-      <h2>🎬 O Grande Filme</h2>
-      <p>2026 • Ação</p>
-      <p class="nota">⭐ 8.5</p>
-    </div>
-
-    <div class="filme">
-      <h2>🍿 Aventura Incrível</h2>
-      <p>2026 • Aventura</p>
-      <p class="nota">⭐ 8.1</p>
-    </div>
-
-    <div class="filme">
-      <h2>🚀 Além do Espaço</h2>
-      <p>2025 • Ficção</p>
-      <p class="nota">⭐ 9.0</p>
-    </div>
-
-  </div>
+  <div id="resultado"></div>
 
 </main>
 
 <script>
-function buscar() {
+
+const API_KEY = "f4e2430e564ffb2d4128ed961cd4a78d";
+
+async function buscar() {
 
   const texto = document
     .getElementById("pesquisa")
     .value
-    .toLowerCase();
+    .trim();
 
-  const filmes = document.querySelectorAll(".filme");
+  const resultado = document.getElementById("resultado");
 
-  filmes.forEach(function(filme) {
+  if (!texto) {
+    resultado.innerHTML =
+      "<p class='erro'>Digite o nome de um filme.</p>";
+    return;
+  }
 
-    const nome = filme
-      .querySelector("h2")
-      .textContent
-      .toLowerCase();
+  resultado.innerHTML =
+    "<p class='carregando'>🔎 Pesquisando filmes...</p>";
 
-    if (nome.includes(texto)) {
-      filme.style.display = "block";
-    } else {
-      filme.style.display = "none";
+  try {
+
+    const url =
+      "https://api.themoviedb.org/3/search/movie" +
+      "?api_key=" + API_KEY +
+      "&language=pt-BR" +
+      "&query=" + encodeURIComponent(texto);
+
+    const resposta = await fetch(url);
+
+    if (!resposta.ok) {
+      throw new Error("Erro na API");
     }
 
-  });
+    const dados = await resposta.json();
+
+    if (!dados.results || dados.results.length === 0) {
+      resultado.innerHTML =
+        "<p class='erro'>Nenhum filme encontrado.</p>";
+      return;
+    }
+
+    resultado.innerHTML = "";
+
+    dados.results.forEach(function(filme) {
+
+      const ano = filme.release_date
+        ? filme.release_date.substring(0, 4)
+        : "Ano desconhecido";
+
+      const nota = filme.vote_average
+        ? filme.vote_average.toFixed(1)
+        : "Sem nota";
+
+      const poster = filme.poster_path
+        ? "https://image.tmdb.org/t/p/w300" + filme.poster_path
+        : "";
+
+      const descricao = filme.overview
+        ? filme.overview
+        : "Sinopse não disponível.";
+
+      const elemento = document.createElement("div");
+
+      elemento.className = "filme";
+
+      elemento.innerHTML = `
+        ${poster
+          ? `<img src="${poster}" alt="${filme.title}">`
+          : ""
+        }
+
+        <div>
+          <h2>🎬 ${filme.title}</h2>
+
+          <p>${ano}</p>
+
+          <p class="nota">
+            ⭐ ${nota}
+          </p>
+
+          <p>
+            ${descricao}
+          </p>
+        </div>
+      `;
+
+      resultado.appendChild(elemento);
+
+    });
+
+  } catch (erro) {
+
+    console.error(erro);
+
+    resultado.innerHTML =
+      "<p class='erro'>Não foi possível pesquisar os filmes. Verifique a API.</p>";
+
+  }
+
 }
+
 </script>
 
 </body>
