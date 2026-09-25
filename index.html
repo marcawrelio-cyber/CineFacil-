@@ -259,20 +259,20 @@ h2 {
       Cine<span>Fácil</span>
     </div>
 
-    <div class="pesquisa-topo">
+    <form class="pesquisa-topo" id="formPesquisa">
 
-      <input
-        id="pesquisa"
-        type="text"
-        placeholder="Pesquisar filmes..."
-        onkeydown="if(event.key === 'Enter') pesquisar()"
-      >
+  <input
+    id="pesquisa"
+    type="search"
+    placeholder="Pesquisar filmes..."
+    autocomplete="off"
+  >
 
-      <button onclick="pesquisar()">
-        🔎
-      </button>
+  <button type="submit">
+    🔎
+  </button>
 
-    </div>
+</form>
 
   </div>
 
