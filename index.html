@@ -259,20 +259,20 @@ h2 {
       Cine<span>Fácil</span>
     </div>
 
-    <form class="pesquisa-topo" id="formPesquisa">
+    <div class="pesquisa-topo">
 
-  <input
-    id="pesquisa"
-    type="search"
-    placeholder="Pesquisar filmes..."
-    autocomplete="off"
-  >
+      <input
+        id="pesquisa"
+        type="text"
+        placeholder="Pesquisar filmes..."
+        onkeydown="if(event.key === 'Enter') pesquisar()"
+      >
 
-  <button type="submit">
-    🔎
-  </button>
+      <button onclick="pesquisar()">
+        🔎
+      </button>
 
-</form>
+    </div>
 
   </div>
 
@@ -855,15 +855,7 @@ function inicio() {
 
 }
 
-document
-  .getElementById("formPesquisa")
-  .addEventListener("submit", function(event) {
 
-    event.preventDefault();
-
-    pesquisar();
-
-  });
 carregarInicio();
 
 </script>
