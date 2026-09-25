@@ -1,1394 +1,792 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>CineFácil</title>
-
-<style>
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  background: #08080c;
-  color: white;
-  font-family: Arial, sans-serif;
-}
-
-header {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: rgba(15,15,21,0.96);
-  padding: 18px;
-  border-bottom: 1px solid #24242c;
-}
-
-.topo {
-  max-width: 1100px;
-  margin: auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 15px;
-}
-
-.logo {
-  font-size: 29px;
-  font-weight: bold;
-}
-
-.logo span {
-  color: #e50914;
-}
-
-.pesquisa-topo {
-  display: flex;
-  gap: 8px;
-  width: 55%;
-}
-
-.pesquisa-topo input {
-  flex: 1;
-  padding: 12px;
-  background: #1b1b23;
-  color: white;
-  border: 1px solid #444;
-  border-radius: 8px;
-  outline: none;
-}
-
-.pesquisa-topo button {
-  padding: 12px 18px;
-  background: #e50914;
-  color: white;
-  border: 0;
-  border-radius: 8px;
-  font-weight: bold;
-}
-
-main {
-  max-width: 1100px;
-  margin: auto;
-  padding: 25px 18px 50px;
-}
-
-h1 {
-  margin-top: 10px;
-}
-
-h2 {
-  margin-top: 35px;
-}
-
-.subtitulo {
-  color: #aaa;
-}
-
-.categorias {
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  padding: 10px 0 5px;
-}
-
-.categorias button {
-  white-space: nowrap;
-  background: #202028;
-  color: white;
-  border: 1px solid #333;
-  padding: 10px 15px;
-  border-radius: 20px;
-  cursor: pointer;
-}
-
-.categorias button:hover {
-  background: #e50914;
-}
-
-.lista {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 16px;
-}
-
-.card {
-  background: #15151c;
-  border-radius: 12px;
-  overflow: hidden;
-  cursor: pointer;
-  border: 1px solid #25252e;
-  transition: 0.2s;
-}
-
-.card:hover {
-  transform: translateY(-4px);
-  border-color: #e50914;
-}
-
-.card img {
-  width: 100%;
-  height: 225px;
-  object-fit: cover;
-  display: block;
-}
-
-.card-info {
-  padding: 12px;
-}
-
-.card h3 {
-  margin: 0 0 7px;
-  font-size: 16px;
-}
-
-.nota {
-  color: #ffd000;
-  font-size: 14px;
-}
-
-.ano {
-  color: #999;
-  font-size: 13px;
-}
-
-.mensagem {
-  text-align: center;
-  color: #aaa;
-  padding: 30px;
-}
-
-.detalhes {
-  display: none;
-}
-
-.voltar {
-  background: #30303a;
-  color: white;
-  border: 0;
-  padding: 12px 18px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  cursor: pointer;
-}
-
-.detalhes-box {
-  display: flex;
-  gap: 25px;
-  background: #15151c;
-  padding: 20px;
-  border-radius: 15px;
-}
-
-.poster {
-  width: 260px;
-  height: 390px;
-  object-fit: cover;
-  border-radius: 12px;
-}
-
-.detalhes h1 {
-  margin-top: 0;
-  font-size: 32px;
-}
-
-.sinopse {
-  line-height: 1.7;
-  color: #ddd;
-}
-
-.generos {
-  color: #bbb;
-}
-
-.trailer {
-  margin-top: 25px;
-}
-
-.trailer iframe {
-  width: 100%;
-  max-width: 800px;
-  aspect-ratio: 16 / 9;
-  border: 0;
-  border-radius: 12px;
-}
-
-
-/* ============================= */
-/* ÁREA ASSISTIR */
-/* ============================= */
-
-.assistir-box {
-  background: #15151c;
-  border: 1px solid #25252e;
-  border-radius: 15px;
-  padding: 20px;
-  margin-top: 20px;
-}
-
-.m3u-form {
-  display: flex;
-  gap: 10px;
-  width: 100%;
-}
-
-.m3u-form input {
-  flex: 1;
-  padding: 14px;
-  background: #1b1b23;
-  color: white;
-  border: 1px solid #444;
-  border-radius: 8px;
-  outline: none;
-}
-
-.m3u-form button {
-  padding: 14px 20px;
-  background: #e50914;
-  color: white;
-  border: 0;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.m3u-form button:hover {
-  background: #ff202b;
-}
-
-.player-area {
-  display: none;
-  margin-top: 25px;
-  background: #000;
-  padding: 15px;
-  border-radius: 15px;
-}
-
-.player-area h2 {
-  margin-top: 0;
-}
-
-#playerM3U {
-  width: 100%;
-  max-width: 900px;
-  display: block;
-  margin: auto;
-  background: #000;
-  border-radius: 10px;
-}
-
-.fechar-player {
-  background: #30303a;
-  color: white;
-  border: 0;
-  padding: 10px 15px;
-  border-radius: 8px;
-  margin-bottom: 15px;
-  cursor: pointer;
-}
-
-.m3u-card {
-  background: #15151c;
-  border-radius: 12px;
-  overflow: hidden;
-  cursor: pointer;
-  border: 1px solid #25252e;
-  transition: 0.2s;
-}
-
-.m3u-card:hover {
-  transform: translateY(-4px);
-  border-color: #e50914;
-}
-
-.m3u-card img {
-  width: 100%;
-  height: 210px;
-  object-fit: cover;
-  display: block;
-  background: #202028;
-}
-
-.m3u-card-info {
-  padding: 12px;
-}
-
-.m3u-card h3 {
-  margin: 0 0 7px;
-  font-size: 15px;
-}
-
-.m3u-grupo {
-  color: #999;
-  font-size: 13px;
-}
-
-.assistir-status {
-  color: #aaa;
-  margin-top: 15px;
-  text-align: center;
-}
-
-
-/* ============================= */
-/* RESPONSIVO */
-/* ============================= */
-
-@media(max-width:700px) {
-
-  .topo {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .pesquisa-topo {
-    width: 100%;
-  }
-
-  .lista {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .card img {
-    height: 240px;
-  }
-
-  .detalhes-box {
-    flex-direction: column;
-  }
-
-  .poster {
-    width: 220px;
-    height: 330px;
-    margin: auto;
-  }
-
-  .m3u-form {
-    flex-direction: column;
-  }
-
-  .m3u-form button {
-    width: 100%;
-  }
-
-  .m3u-card img {
-    height: 220px;
-  }
-
-}
-
-</style>
-</head>
-
-<body>
-
-<header>
-
-  <div class="topo">
-
-    <div class="logo">
-      Cine<span>Fácil</span>
-    </div>
-
-    <div class="pesquisa-topo">
-
-      <input
-        id="pesquisa"
-        type="text"
-        placeholder="Pesquisar filmes..."
-        onkeydown="if(event.key === 'Enter') pesquisar()"
-      >
-
-      <button onclick="pesquisar()">
-        🔎
-      </button>
-
-    </div>
-
-  </div>
-
-</header>
-
-
-<main>
-
-<section id="inicio">
-
-  <h1>🎬 Descubra filmes</h1>
-
-  <p class="subtitulo">
-    Encontre filmes, veja informações e assista aos trailers.
-  </p>
-
-
-  <h2>🎭 Categorias</h2>
-
-  <div class="categorias">
-
-    <button onclick="genero(28)">Ação</button>
-
-    <button onclick="genero(12)">Aventura</button>
-
-    <button onclick="genero(35)">Comédia</button>
-
-    <button onclick="genero(27)">Terror</button>
-
-    <button onclick="genero(878)">Ficção</button>
-
-    <button onclick="genero(10749)">Romance</button>
-
-    <button onclick="genero(16)">Animação</button>
-
-  </div>
-
-
-  <h2>🔥 Filmes populares</h2>
-
-  <div id="populares" class="lista">
-    <div class="mensagem">
-      Carregando filmes...
-    </div>
-  </div>
-
-
-  <h2>⭐ Mais bem avaliados</h2>
-
-  <div id="avaliados" class="lista">
-    <div class="mensagem">
-      Carregando filmes...
-    </div>
-  </div>
-
-
-  <!-- ============================= -->
-  <!-- NOVA ÁREA ASSISTIR -->
-  <!-- ============================= -->
-
-  <h2>🎬 Assistir</h2>
-
-  <div class="assistir-box">
-
-    <p class="subtitulo">
-      Carregue uma playlist M3U autorizada para visualizar seus conteúdos.
-    </p>
-
-    <div class="m3u-form">
-
-      <input
-        id="urlM3U"
-        type="url"
-        placeholder="Cole aqui o link da playlist M3U..."
-      >
-
-      <button onclick="carregarM3U()">
-        ▶️ Carregar
-      </button>
-
-    </div>
-
-    <div
-      id="statusM3U"
-      class="assistir-status">
-    </div>
-
-  </div>
-
-
-  <div
-    id="playerArea"
-    class="player-area">
-
-    <button
-      class="fechar-player"
-      onclick="fecharPlayer()">
-      ✕ Fechar player
-    </button>
-
-    <h2 id="nomePlayer">
-      ▶️ Reproduzindo
-    </h2>
-
-    <video
-      id="playerM3U"
-      controls
-      playsinline>
-    </video>
-
-  </div>
-
-
-  <div
-    id="listaM3U"
-    class="lista"
-    style="margin-top:25px;">
-  </div>
-
-
-</section>
-
-
-<section id="resultados" style="display:none">
-
-  <button class="voltar" onclick="inicio()">
-    ← Voltar
-  </button>
-
-  <h2 id="tituloResultados">
-    Resultados
-  </h2>
-
-  <div id="listaResultados" class="lista"></div>
-
-</section>
-
-
-<section id="telaDetalhes" class="detalhes">
-
-  <button class="voltar" onclick="inicio()">
-    ← Voltar para início
-  </button>
-
-  <div id="conteudoDetalhes"></div>
-
-</section>
-
-</main>
-
-
-<script>
-
-const API_KEY = "f4e2430e564ffb2d4128ed961cd4a78d";
-
-const API =
-"https://api.themoviedb.org/3";
-
-const IMAGEM =
-"https://image.tmdb.org/t/p/w500";
-
-
-async function api(url) {
-
-  const resposta =
-    await fetch(url);
-
-  if (!resposta.ok) {
-    throw new Error("Erro na API");
-  }
-
-  return await resposta.json();
-}
-
-
-function criarCard(filme) {
-
-  const card =
-    document.createElement("div");
-
-  card.className = "card";
-
-  const poster =
-    filme.poster_path
-    ? IMAGEM + filme.poster_path
-    : "https://via.placeholder.com/500x750?text=Sem+poster";
-
-  const ano =
-    filme.release_date
-    ? filme.release_date.substring(0,4)
-    : "----";
-
-  const nota =
-    filme.vote_average
-    ? filme.vote_average.toFixed(1)
-    : "N/A";
-
-  card.innerHTML = `
-
-    <img
-      src="${poster}"
-      alt="${filme.title}"
-    >
-
-    <div class="card-info">
-
-      <h3>
-        ${filme.title}
-      </h3>
-
-      <div class="ano">
-        📅 ${ano}
-      </div>
-
-      <div class="nota">
-        ⭐ ${nota}
-      </div>
-
-    </div>
-
-  `;
-
-  card.onclick =
-    () => abrirDetalhes(filme.id);
-
-  return card;
-
-}
-
-
-async function carregarInicio() {
-
-  try {
-
-    const populares =
-      await api(
-        API +
-        "/movie/popular" +
-        "?api_key=" +
-        API_KEY +
-        "&language=pt-BR"
-      );
-
-    const avaliados =
-      await api(
-        API +
-        "/movie/top_rated" +
-        "?api_key=" +
-        API_KEY +
-        "&language=pt-BR"
-      );
-
-
-    const divPopulares =
-      document.getElementById("populares");
-
-    const divAvaliados =
-      document.getElementById("avaliados");
-
-
-    divPopulares.innerHTML = "";
-
-    divAvaliados.innerHTML = "";
-
-
-    populares.results
-      .slice(0,10)
-      .forEach(filme => {
-
-        divPopulares.appendChild(
-          criarCard(filme)
-        );
-
-      });
-
-
-    avaliados.results
-      .slice(0,10)
-      .forEach(filme => {
-
-        divAvaliados.appendChild(
-          criarCard(filme)
-        );
-
-      });
-
-  }
-
-  catch(erro) {
-
-    console.error(erro);
-
-    document.getElementById("populares")
-      .innerHTML =
-      "<div class='mensagem'>Não foi possível carregar os filmes.</div>";
-
-  }
-
-}
-
-
-async function pesquisar() {
-
-  const texto =
-    document
-    .getElementById("pesquisa")
-    .value
-    .trim();
-
-  if(!texto) return;
-
-  mostrarResultados();
-
-  document.getElementById("tituloResultados")
-    .textContent =
-    "🔎 Resultados para: " + texto;
-
-  const lista =
-    document.getElementById("listaResultados");
-
-  lista.innerHTML =
-    "<div class='mensagem'>Pesquisando...</div>";
-
-
-  try {
-
-    const dados =
-      await api(
-        API +
-        "/search/movie" +
-        "?api_key=" +
-        API_KEY +
-        "&language=pt-BR" +
-        "&query=" +
-        encodeURIComponent(texto)
-      );
-
-
-    lista.innerHTML = "";
-
-
-    if(!dados.results.length) {
-
-      lista.innerHTML =
-        "<div class='mensagem'>Nenhum filme encontrado.</div>";
-
-      return;
-
-    }
-
-
-    dados.results.forEach(filme => {
-
-      lista.appendChild(
-        criarCard(filme)
-      );
-
-    });
-
-  }
-
-  catch(erro) {
-
-    lista.innerHTML =
-      "<div class='mensagem'>Erro ao pesquisar.</div>";
-
-  }
-
-}
-
-
-async function genero(id) {
-
-  mostrarResultados();
-
-  document.getElementById("tituloResultados")
-    .textContent =
-    "🎭 Filmes da categoria";
-
-
-  const lista =
-    document.getElementById("listaResultados");
-
-  lista.innerHTML =
-    "<div class='mensagem'>Carregando...</div>";
-
-
-  try {
-
-    const dados =
-      await api(
-        API +
-        "/discover/movie" +
-        "?api_key=" +
-        API_KEY +
-        "&language=pt-BR" +
-        "&with_genres=" +
-        id +
-        "&sort_by=popularity.desc"
-      );
-
-
-    lista.innerHTML = "";
-
-
-    dados.results.forEach(filme => {
-
-      lista.appendChild(
-        criarCard(filme)
-      );
-
-    });
-
-  }
-
-  catch(erro) {
-
-    lista.innerHTML =
-      "<div class='mensagem'>Erro ao carregar categoria.</div>";
-
-  }
-
-}
-
-
-async function abrirDetalhes(id) {
-
-  document.getElementById("inicio")
-    .style.display = "none";
-
-  document.getElementById("resultados")
-    .style.display = "none";
-
-  document.getElementById("telaDetalhes")
-    .style.display = "block";
-
-
-  const conteudo =
-    document.getElementById("conteudoDetalhes");
-
-  conteudo.innerHTML =
-    "<div class='mensagem'>Carregando informações...</div>";
-
-
-  try {
-
-    const filme =
-      await api(
-        API +
-        "/movie/" +
-        id +
-        "?api_key=" +
-        API_KEY +
-        "&language=pt-BR"
-      );
-
-
-    const poster =
-      filme.poster_path
-      ? IMAGEM + filme.poster_path
-      : "";
-
-
-    const generos =
-      filme.genres
-      ? filme.genres
-          .map(g => g.name)
-          .join(" • ")
-      : "";
-
-
-    conteudo.innerHTML = `
-
-      <div class="detalhes-box">
-
-        ${
-          poster
-          ? `
-          <img
-            class="poster"
-            src="${poster}"
-            alt="${filme.title}"
-          >
-          `
-          : ""
-        }
-
-
-        <div>
-
-          <h1>
-            ${filme.title}
-          </h1>
-
-          <p>
-            📅 ${
-              filme.release_date
-              ? filme.release_date.substring(0,4)
-              : "----"
-            }
-          </p>
-
-          <p class="nota">
-            ⭐ ${
-              filme.vote_average
-              ? filme.vote_average.toFixed(1)
-              : "N/A"
-            }
-          </p>
-
-          <p class="generos">
-            🎭 ${generos}
-          </p>
-
-          <h2>
-            📖 Sinopse
-          </h2>
-
-          <p class="sinopse">
-            ${
-              filme.overview ||
-              "Sinopse não disponível."
-            }
-          </p>
-
-        </div>
-
-      </div>
-
-      <div id="trailerArea"></div>
-
-    `;
-
-
-    carregarTrailer(id);
-
-  }
-
-  catch(erro) {
-
-    conteudo.innerHTML =
-      "<div class='mensagem'>Não foi possível carregar o filme.</div>";
-
-  }
-
-}
-
-
-async function carregarTrailer(id) {
-
-  const area =
-    document.getElementById("trailerArea");
-
-
-  try {
-
-    const dados =
-      await api(
-        API +
-        "/movie/" +
-        id +
-        "/videos" +
-        "?api_key=" +
-        API_KEY +
-        "&language=pt-BR"
-      );
-
-
-    let trailer =
-      dados.results.find(
-        video =>
-        video.site === "YouTube" &&
-        video.type === "Trailer"
-      );
-
-
-    if(!trailer) {
-
-      trailer =
-        dados.results.find(
-          video =>
-            video.site === "YouTube"
-        );
-
-    }
-
-
-    if(trailer) {
-
-      area.innerHTML = `
-
-        <div class="trailer">
-
-          <h2>
-            ▶️ Trailer
-          </h2>
-
-          <iframe
-            src="https://www.youtube.com/embed/${trailer.key}"
-            allowfullscreen>
-          </iframe>
-
-        </div>
-
-      `;
-
-    }
-
-  }
-
-  catch(erro) {
-
-    console.error(erro);
-
-  }
-
-}
-
-
-/* ============================= */
-/* FUNÇÕES DA ÁREA ASSISTIR */
-/* ============================= */
-
-
-async function carregarM3U() {
-
-  const campo =
-    document.getElementById("urlM3U");
-
-  const url =
-    campo.value.trim();
-
-  const lista =
-    document.getElementById("listaM3U");
-
-  const status =
-    document.getElementById("statusM3U");
-
-
-  if(!url) {
-
-    status.textContent =
-      "⚠️ Cole primeiro o endereço da playlist M3U.";
-
-    return;
-
-  }
-
-
-  status.textContent =
-    "⏳ Carregando playlist...";
-
-  lista.innerHTML = "";
-
-
-  try {
-
-    const resposta =
-      await fetch(url);
-
-
-    if(!resposta.ok) {
-
-      throw new Error(
-        "Não foi possível acessar a playlist."
-      );
-
-    }
-
-
-    const texto =
-      await resposta.text();
-
-
-    const itens =
-      interpretarM3U(texto);
-
-
-    if(!itens.length) {
-
-      status.textContent =
-        "⚠️ A playlist foi acessada, mas nenhum item foi encontrado.";
-
-      return;
-
-    }
-
-
-    status.textContent =
-      "✅ " +
-      itens.length +
-      " itens encontrados.";
-
-
-    itens.forEach(item => {
-
-      const card =
-        document.createElement("div");
-
-      card.className =
-        "m3u-card";
-
-
-      const imagem =
-        item.logo ||
-        "https://via.placeholder.com/500x750?text=CineFacil";
-
-
-      card.innerHTML = `
-
-        <img
-          src="${imagem}"
-          alt="${item.nome}"
-          onerror="
-            this.src='https://via.placeholder.com/500x750?text=CineFacil'
-          "
-        >
-
-        <div class="m3u-card-info">
-
-          <h3>
-            ${item.nome}
-          </h3>
-
-          <div class="m3u-grupo">
-            📁 ${item.grupo || "Sem categoria"}
-          </div>
-
-        </div>
-
-      `;
-
-
-      card.onclick =
-        () => abrirPlayer(item);
-
-
-      lista.appendChild(card);
-
-    });
-
-  }
-
-  catch(erro) {
-
-    console.error(erro);
-
-
-    status.innerHTML = `
-      ❌ Não foi possível carregar a playlist.
-      <br><br>
-      O servidor pode não permitir acesso pelo navegador
-      ou pode exigir outro tipo de conexão.
-    `;
-
-  }
-
-}
-
-
-/* Interpreta o formato M3U */
-
-function interpretarM3U(texto) {
-
-  const linhas =
-    texto.split(/\r?\n/);
-
-  const itens = [];
-
-  let info = null;
-
-
-  for(let i = 0; i < linhas.length; i++) {
-
-    const linha =
-      linhas[i].trim();
-
-
-    if(!linha) {
-      continue;
-    }
-
-
-    if(linha.startsWith("#EXTINF")) {
-
-      const posicaoVirgula =
-        linha.lastIndexOf(",");
-
-
-      let nome =
-        posicaoVirgula >= 0
-        ? linha.substring(posicaoVirgula + 1).trim()
-        : "Sem nome";
-
-
-      const logoEncontrado =
-        linha.match(
-          /tvg-logo="([^"]*)"/i
-        );
-
-
-      const grupoEncontrado =
-        linha.match(
-          /group-title="([^"]*)"/i
-        );
-
-
-      info = {
-
-        nome:
-          nome,
-
-        logo:
-          logoEncontrado
-          ? logoEncontrado[1]
-          : "",
-
-        grupo:
-          grupoEncontrado
-          ? grupoEncontrado[1]
-          : "Sem categoria"
-
-      };
-
-
-      continue;
-
-    }
-
-
-    if(linha.startsWith("#")) {
-      continue;
-    }
-
-
-    if(
-      info &&
-      (
-        linha.startsWith("http://") ||
-        linha.startsWith("https://")
-      )
-    ) {
-
-      itens.push({
-
-        nome:
-          info.nome,
-
-        logo:
-          info.logo,
-
-        grupo:
-          info.grupo,
-
-        url:
-          linha
-
-      });
-
-
-      info = null;
-
-    }
-
-  }
-
-
-  return itens;
-
-}
-
-
-/* Abre o player */
-
-function abrirPlayer(item) {
-
-  const area =
-    document.getElementById("playerArea");
-
-  const player =
-    document.getElementById("playerM3U");
-
-  const nome =
-    document.getElementById("nomePlayer");
-
-
-  nome.textContent =
-    "▶️ " + item.nome;
-
-
-  area.style.display =
-    "block";
-
-
-  player.pause();
-
-
-  player.src =
-    item.url;
-
-
-  player.load();
-
-
-  player.play()
-    .catch(() => {
-
-      console.log(
-        "O navegador aguardará o usuário apertar play."
-      );
-
-    });
-
-
-  area.scrollIntoView({
-    behavior: "smooth"
-  });
-
-}
-
-
-/* Fecha o player */
-
-function fecharPlayer() {
-
-  const area =
-    document.getElementById("playerArea");
-
-  const player =
-    document.getElementById("playerM3U");
-
-
-  player.pause();
-
-  player.removeAttribute("src");
-
-  player.load();
-
-
-  area.style.display =
-    "none";
-
-}
-
-
-/* ============================= */
-/* NAVEGAÇÃO */
-/* ============================= */
-
-
-function mostrarResultados() {
-
-  document.getElementById("inicio")
-    .style.display = "none";
-
-  document.getElementById("telaDetalhes")
-    .style.display = "none";
-
-  document.getElementById("resultados")
-    .style.display = "block";
-
-}
-
-
-function inicio() {
-
-  document.getElementById("resultados")
-    .style.display = "none";
-
-  document.getElementById("telaDetalhes")
-    .style.display = "none";
-
-  document.getElementById("inicio")
-    .style.display = "block";
-
-}
-
-
-carregarInicio();
-
-</script>
-
-</body>
-</html>
+<!DOCTYPE html>  <html lang="pt-BR">  
+<head>  
+<meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1.0">  <title>CineFácil</title>  <style>  
+  
+* {  
+  box-sizing: border-box;  
+}  
+  
+body {  
+  margin: 0;  
+  background: #08080c;  
+  color: white;  
+  font-family: Arial, sans-serif;  
+}  
+  
+header {  
+  position: sticky;  
+  top: 0;  
+  z-index: 10;  
+  background: rgba(15,15,21,0.96);  
+  padding: 18px;  
+  border-bottom: 1px solid #24242c;  
+}  
+  
+.topo {  
+  max-width: 1100px;  
+  margin: auto;  
+  display: flex;  
+  align-items: center;  
+  justify-content: space-between;  
+  gap: 15px;  
+}  
+  
+.logo {  
+  font-size: 29px;  
+  font-weight: bold;  
+}  
+  
+.logo span {  
+  color: #e50914;  
+}  
+  
+.pesquisa-topo {  
+  display: flex;  
+  gap: 8px;  
+  width: 55%;  
+}  
+  
+.pesquisa-topo input {  
+  flex: 1;  
+  padding: 12px;  
+  background: #1b1b23;  
+  color: white;  
+  border: 1px solid #444;  
+  border-radius: 8px;  
+  outline: none;  
+}  
+  
+.pesquisa-topo button {  
+  padding: 12px 18px;  
+  background: #e50914;  
+  color: white;  
+  border: 0;  
+  border-radius: 8px;  
+  font-weight: bold;  
+}  
+  
+main {  
+  max-width: 1100px;  
+  margin: auto;  
+  padding: 25px 18px 50px;  
+}  
+  
+h1 {  
+  margin-top: 10px;  
+}  
+  
+h2 {  
+  margin-top: 35px;  
+}  
+  
+.subtitulo {  
+  color: #aaa;  
+}  
+  
+.categorias {  
+  display: flex;  
+  gap: 10px;  
+  overflow-x: auto;  
+  padding: 10px 0 5px;  
+}  
+  
+.categorias button {  
+  white-space: nowrap;  
+  background: #202028;  
+  color: white;  
+  border: 1px solid #333;  
+  padding: 10px 15px;  
+  border-radius: 20px;  
+}  
+  
+.categorias button:hover {  
+  background: #e50914;  
+}  
+  
+.lista {  
+  display: grid;  
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));  
+  gap: 16px;  
+}  
+  
+.card {  
+  background: #15151c;  
+  border-radius: 12px;  
+  overflow: hidden;  
+  cursor: pointer;  
+  border: 1px solid #25252e;  
+  transition: 0.2s;  
+}  
+  
+.card:hover {  
+  transform: translateY(-4px);  
+  border-color: #e50914;  
+}  
+  
+.card img {  
+  width: 100%;  
+  height: 225px;  
+  object-fit: cover;  
+  display: block;  
+}  
+  
+.card-info {  
+  padding: 12px;  
+}  
+  
+.card h3 {  
+  margin: 0 0 7px;  
+  font-size: 16px;  
+}  
+  
+.nota {  
+  color: #ffd000;  
+  font-size: 14px;  
+}  
+  
+.ano {  
+  color: #999;  
+  font-size: 13px;  
+}  
+  
+.mensagem {  
+  text-align: center;  
+  color: #aaa;  
+  padding: 30px;  
+}  
+  
+.detalhes {  
+  display: none;  
+}  
+  
+.voltar {  
+  background: #30303a;  
+  color: white;  
+  border: 0;  
+  padding: 12px 18px;  
+  border-radius: 8px;  
+  margin-bottom: 20px;  
+}  
+  
+.detalhes-box {  
+  display: flex;  
+  gap: 25px;  
+  background: #15151c;  
+  padding: 20px;  
+  border-radius: 15px;  
+}  
+  
+.poster {  
+  width: 260px;  
+  height: 390px;  
+  object-fit: cover;  
+  border-radius: 12px;  
+}  
+  
+.detalhes h1 {  
+  margin-top: 0;  
+  font-size: 32px;  
+}  
+  
+.sinopse {  
+  line-height: 1.7;  
+  color: #ddd;  
+}  
+  
+.generos {  
+  color: #bbb;  
+}  
+  
+.trailer {  
+  margin-top: 25px;  
+}  
+  
+.trailer iframe {  
+  width: 100%;  
+  max-width: 800px;  
+  aspect-ratio: 16 / 9;  
+  border: 0;  
+  border-radius: 12px;  
+}  
+  
+@media(max-width:700px) {  
+  
+  .topo {  
+    flex-direction: column;  
+    align-items: stretch;  
+  }  
+  
+  .pesquisa-topo {  
+    width: 100%;  
+  }  
+  
+  .lista {  
+    grid-template-columns: repeat(2, 1fr);  
+  }  
+  
+  .card img {  
+    height: 240px;  
+  }  
+  
+  .detalhes-box {  
+    flex-direction: column;  
+  }  
+  
+  .poster {  
+    width: 220px;  
+    height: 330px;  
+    margin: auto;  
+  }  
+  
+}  
+  
+</style>  </head>  <body>  <header>    <div class="topo">  <div class="logo">  
+  Cine<span>Fácil</span>  
+</div>  
+
+<div class="pesquisa-topo">  
+
+  <input  
+    id="pesquisa"  
+    type="text"  
+    placeholder="Pesquisar filmes..."  
+    onkeydown="if(event.key === 'Enter') pesquisar()"  
+  >  
+
+  <button onclick="pesquisar()">  
+    🔎  
+  </button>  
+
+</div>
+
+  </div>  </header>  <main>  <section id="inicio">    <h1>🎬 Descubra filmes</h1>    <p class="subtitulo">  
+    Encontre filmes, veja informações e assista aos trailers.  
+  </p>    <h2>🎭 Categorias</h2>    <div class="categorias">  <button onclick="genero(28)">Ação</button>  
+
+<button onclick="genero(12)">Aventura</button>  
+
+<button onclick="genero(35)">Comédia</button>  
+
+<button onclick="genero(27)">Terror</button>  
+
+<button onclick="genero(878)">Ficção</button>  
+
+<button onclick="genero(10749)">Romance</button>  
+
+<button onclick="genero(16)">Animação</button>
+
+  </div>    <h2>🔥 Filmes populares</h2>    <div id="populares" class="lista">  
+    <div class="mensagem">  
+      Carregando filmes...  
+    </div>  
+  </div>    <h2>⭐ Mais bem avaliados</h2>    <div id="avaliados" class="lista">  
+    <div class="mensagem">  
+      Carregando filmes...  
+    </div>  
+  </div>  </section>  <section id="resultados" style="display:none">    <button class="voltar" onclick="inicio()">  
+    ← Voltar  
+  </button>    <h2 id="tituloResultados">  
+    Resultados  
+  </h2>    <div id="listaResultados" class="lista"></div>  </section>  <section id="telaDetalhes" class="detalhes">    <button class="voltar" onclick="inicio()">  
+    ← Voltar para início  
+  </button>    <div id="conteudoDetalhes"></div>  </section>  </main>  <script>  
+  
+const API_KEY = "f4e2430e564ffb2d4128ed961cd4a78d";  
+  
+const API =  
+"https://api.themoviedb.org/3";  
+  
+const IMAGEM =  
+"https://image.tmdb.org/t/p/w500";  
+  
+  
+async function api(url) {  
+  
+  const resposta =  
+    await fetch(url);  
+  
+  if (!resposta.ok) {  
+    throw new Error("Erro na API");  
+  }  
+  
+  return await resposta.json();  
+}  
+  
+  
+function criarCard(filme) {  
+  
+  const card =  
+    document.createElement("div");  
+  
+  card.className = "card";  
+  
+  const poster =  
+    filme.poster_path  
+    ? IMAGEM + filme.poster_path  
+    : "https://via.placeholder.com/500x750?text=Sem+poster";  
+  
+  const ano =  
+    filme.release_date  
+    ? filme.release_date.substring(0,4)  
+    : "----";  
+  
+  const nota =  
+    filme.vote_average  
+    ? filme.vote_average.toFixed(1)  
+    : "N/A";  
+  
+  card.innerHTML = `  
+  
+    <img  
+      src="${poster}"  
+      alt="${filme.title}"  
+    >  
+  
+    <div class="card-info">  
+  
+      <h3>  
+        ${filme.title}  
+      </h3>  
+  
+      <div class="ano">  
+        📅 ${ano}  
+      </div>  
+  
+      <div class="nota">  
+        ⭐ ${nota}  
+      </div>  
+  
+    </div>  
+  
+  `;  
+  
+  card.onclick =  
+    () => abrirDetalhes(filme.id);  
+  
+  return card;  
+  
+}  
+  
+  
+async function carregarInicio() {  
+  
+  try {  
+  
+    const populares =  
+      await api(  
+        API +  
+        "/movie/popular" +  
+        "?api_key=" +  
+        API_KEY +  
+        "&language=pt-BR"  
+      );  
+  
+    const avaliados =  
+      await api(  
+        API +  
+        "/movie/top_rated" +  
+        "?api_key=" +  
+        API_KEY +  
+        "&language=pt-BR"  
+      );  
+  
+  
+    const divPopulares =  
+      document.getElementById("populares");  
+  
+    const divAvaliados =  
+      document.getElementById("avaliados");  
+  
+  
+    divPopulares.innerHTML = "";  
+  
+    divAvaliados.innerHTML = "";  
+  
+  
+    populares.results  
+      .slice(0,10)  
+      .forEach(filme => {  
+  
+        divPopulares.appendChild(  
+          criarCard(filme)  
+        );  
+  
+      });  
+  
+  
+    avaliados.results  
+      .slice(0,10)  
+      .forEach(filme => {  
+  
+        divAvaliados.appendChild(  
+          criarCard(filme)  
+        );  
+  
+      });  
+  
+  }  
+  
+  catch(erro) {  
+  
+    console.error(erro);  
+  
+    document.getElementById("populares")  
+      .innerHTML =  
+      "<div class='mensagem'>Não foi possível carregar os filmes.</div>";  
+  
+  }  
+  
+}  
+  
+  
+async function pesquisar() {  
+  
+  const texto =  
+    document  
+    .getElementById("pesquisa")  
+    .value  
+    .trim();  
+  
+  if(!texto) return;  
+  
+  mostrarResultados();  
+  
+  document.getElementById("tituloResultados")  
+    .textContent =  
+    "🔎 Resultados para: " + texto;  
+  
+  const lista =  
+    document.getElementById("listaResultados");  
+  
+  lista.innerHTML =  
+    "<div class='mensagem'>Pesquisando...</div>";  
+  
+  
+  try {  
+  
+    const dados =  
+      await api(  
+        API +  
+        "/search/movie" +  
+        "?api_key=" +  
+        API_KEY +  
+        "&language=pt-BR" +  
+        "&query=" +  
+        encodeURIComponent(texto)  
+      );  
+  
+  
+    lista.innerHTML = "";  
+  
+  
+    if(!dados.results.length) {  
+  
+      lista.innerHTML =  
+        "<div class='mensagem'>Nenhum filme encontrado.</div>";  
+  
+      return;  
+  
+    }  
+  
+  
+    dados.results.forEach(filme => {  
+  
+      lista.appendChild(  
+        criarCard(filme)  
+      );  
+  
+    });  
+  
+  }  
+  
+  catch(erro) {  
+  
+    lista.innerHTML =  
+      "<div class='mensagem'>Erro ao pesquisar.</div>";  
+  
+  }  
+  
+}  
+  
+  
+async function genero(id) {  
+  
+  mostrarResultados();  
+  
+  document.getElementById("tituloResultados")  
+    .textContent =  
+    "🎭 Filmes da categoria";  
+  
+  
+  const lista =  
+    document.getElementById("listaResultados");  
+  
+  lista.innerHTML =  
+    "<div class='mensagem'>Carregando...</div>";  
+  
+  
+  try {  
+  
+    const dados =  
+      await api(  
+        API +  
+        "/discover/movie" +  
+        "?api_key=" +  
+        API_KEY +  
+        "&language=pt-BR" +  
+        "&with_genres=" +  
+        id +  
+        "&sort_by=popularity.desc"  
+      );  
+  
+  
+    lista.innerHTML = "";  
+  
+  
+    dados.results.forEach(filme => {  
+  
+      lista.appendChild(  
+        criarCard(filme)  
+      );  
+  
+    });  
+  
+  }  
+  
+  catch(erro) {  
+  
+    lista.innerHTML =  
+      "<div class='mensagem'>Erro ao carregar categoria.</div>";  
+  
+  }  
+  
+}  
+  
+  
+async function abrirDetalhes(id) {  
+  
+  document.getElementById("inicio")  
+    .style.display = "none";  
+  
+  document.getElementById("resultados")  
+    .style.display = "none";  
+  
+  document.getElementById("telaDetalhes")  
+    .style.display = "block";  
+  
+  
+  const conteudo =  
+    document.getElementById("conteudoDetalhes");  
+  
+  conteudo.innerHTML =  
+    "<div class='mensagem'>Carregando informações...</div>";  
+  
+  
+  try {  
+  
+    const filme =  
+      await api(  
+        API +  
+        "/movie/" +  
+        id +  
+        "?api_key=" +  
+        API_KEY +  
+        "&language=pt-BR"  
+      );  
+  
+  
+    const poster =  
+      filme.poster_path  
+      ? IMAGEM + filme.poster_path  
+      : "";  
+  
+  
+    const generos =  
+      filme.genres  
+      ? filme.genres  
+          .map(g => g.name)  
+          .join(" • ")  
+      : "";  
+  
+  
+    conteudo.innerHTML = `  
+  
+      <div class="detalhes-box">  
+  
+        ${  
+          poster  
+          ? `  
+          <img  
+            class="poster"  
+            src="${poster}"  
+            alt="${filme.title}"  
+          >  
+          `  
+          : ""  
+        }  
+  
+  
+        <div>  
+  
+          <h1>  
+            ${filme.title}  
+          </h1>  
+  
+          <p>  
+            📅 ${  
+              filme.release_date  
+              ? filme.release_date.substring(0,4)  
+              : "----"  
+            }  
+          </p>  
+  
+          <p class="nota">  
+            ⭐ ${  
+              filme.vote_average  
+              ? filme.vote_average.toFixed(1)  
+              : "N/A"  
+            }  
+          </p>  
+  
+          <p class="generos">  
+            🎭 ${generos}  
+          </p>  
+  
+          <h2>  
+            📖 Sinopse  
+          </h2>  
+  
+          <p class="sinopse">  
+            ${  
+              filme.overview ||  
+              "Sinopse não disponível."  
+            }  
+          </p>  
+  
+        </div>  
+  
+      </div>  
+  
+      <div id="trailerArea"></div>  
+  
+    `;  
+  
+  
+    carregarTrailer(id);  
+  
+  }  
+  
+  catch(erro) {  
+  
+    conteudo.innerHTML =  
+      "<div class='mensagem'>Não foi possível carregar o filme.</div>";  
+  
+  }  
+  
+}  
+  
+  
+async function carregarTrailer(id) {  
+  
+  const area =  
+    document.getElementById("trailerArea");  
+  
+  
+  try {  
+  
+    const dados =  
+      await api(  
+        API +  
+        "/movie/" +  
+        id +  
+        "/videos" +  
+        "?api_key=" +  
+        API_KEY +  
+        "&language=pt-BR"  
+      );  
+  
+  
+    let trailer =  
+      dados.results.find(  
+        video =>  
+        video.site === "YouTube" &&  
+        video.type === "Trailer"  
+      );  
+  
+  
+    if(!trailer) {  
+  
+      trailer =  
+        dados.results.find(  
+          video =>  
+          video.site === "YouTube"  
+        );  
+  
+    }  
+  
+  
+    if(trailer) {  
+  
+      area.innerHTML = `  
+  
+        <div class="trailer">  
+  
+          <h2>  
+            ▶️ Trailer  
+          </h2>  
+  
+          <iframe  
+            src="https://www.youtube.com/embed/${trailer.key}"  
+            allowfullscreen>  
+          </iframe>  
+  
+        </div>  
+  
+      `;  
+  
+    }  
+  
+  }  
+  
+  catch(erro) {  
+  
+    console.error(erro);  
+  
+  }  
+  
+}  
+  
+  
+function mostrarResultados() {  
+  
+  document.getElementById("inicio")  
+    .style.display = "none";  
+  
+  document.getElementById("telaDetalhes")  
+    .style.display = "none";  
+  
+  document.getElementById("resultados")  
+    .style.display = "block";  
+  
+}  
+  
+  
+function inicio() {  
+  
+  document.getElementById("resultados")  
+    .style.display = "none";  
+  
+  document.getElementById("telaDetalhes")  
+    .style.display = "none";  
+  
+  document.getElementById("inicio")  
+    .style.display = "block";  
+  
+}  
+  
+  
+carregarInicio();  
+  
+</script>  </body>  
+</html>  
