@@ -1,228 +1,361 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>CineFácil</title>
+<title>CineFácil</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<style>
 
-    body {
-      margin: 0;
-      background: #09090d;
-      color: white;
-      font-family: Arial, sans-serif;
-    }
+* {
+  box-sizing: border-box;
+}
 
-    header {
-      text-align: center;
-      padding: 25px 18px;
-      background: #15151c;
-    }
+body {
+  margin: 0;
+  background: #08080c;
+  color: white;
+  font-family: Arial, sans-serif;
+}
 
-    .logo {
-      font-size: 32px;
-      font-weight: bold;
-    }
+header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(15,15,21,0.96);
+  padding: 18px;
+  border-bottom: 1px solid #24242c;
+}
 
-    .logo span {
-      color: #e50914;
-    }
+.topo {
+  max-width: 1100px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
 
-    .subtitulo {
-      color: #aaa;
-      margin-top: 8px;
-    }
+.logo {
+  font-size: 29px;
+  font-weight: bold;
+}
 
-    main {
-      padding: 25px 18px;
-      max-width: 900px;
-      margin: auto;
-    }
+.logo span {
+  color: #e50914;
+}
 
-    input {
-      width: 100%;
-      padding: 15px;
-      background: #1b1b23;
-      color: white;
-      border: 1px solid #444;
-      border-radius: 10px;
-      font-size: 16px;
-      margin-bottom: 10px;
-    }
+.pesquisa-topo {
+  display: flex;
+  gap: 8px;
+  width: 55%;
+}
 
-    button {
-      width: 100%;
-      padding: 15px;
-      background: #e50914;
-      color: white;
-      border: 0;
-      border-radius: 10px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+.pesquisa-topo input {
+  flex: 1;
+  padding: 12px;
+  background: #1b1b23;
+  color: white;
+  border: 1px solid #444;
+  border-radius: 8px;
+  outline: none;
+}
 
-    #resultado {
-      margin-top: 25px;
-    }
+.pesquisa-topo button {
+  padding: 12px 18px;
+  background: #e50914;
+  color: white;
+  border: 0;
+  border-radius: 8px;
+  font-weight: bold;
+}
 
-    .filme {
-      background: #17171e;
-      border: 1px solid #292933;
-      border-radius: 14px;
-      padding: 15px;
-      margin-bottom: 15px;
-      display: flex;
-      gap: 15px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
+main {
+  max-width: 1100px;
+  margin: auto;
+  padding: 25px 18px 50px;
+}
 
-    .filme:hover {
-      transform: scale(1.01);
-      border-color: #e50914;
-    }
+h1 {
+  margin-top: 10px;
+}
 
-    .filme img {
-      width: 100px;
-      height: 150px;
-      object-fit: cover;
-      border-radius: 8px;
-      flex-shrink: 0;
-    }
+h2 {
+  margin-top: 35px;
+}
 
-    .filme h2 {
-      margin: 0 0 10px;
-      font-size: 20px;
-    }
+.subtitulo {
+  color: #aaa;
+}
 
-    .nota {
-      color: #ffd000;
-      font-weight: bold;
-    }
+.categorias {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 10px 0 5px;
+}
 
-    .carregando,
-    .erro {
-      text-align: center;
-      color: #aaa;
-    }
+.categorias button {
+  white-space: nowrap;
+  background: #202028;
+  color: white;
+  border: 1px solid #333;
+  padding: 10px 15px;
+  border-radius: 20px;
+}
 
-    .detalhes {
-      display: none;
-      background: #15151c;
-      border-radius: 16px;
-      padding: 20px;
-    }
+.categorias button:hover {
+  background: #e50914;
+}
 
-    .detalhes-topo {
-      display: flex;
-      gap: 20px;
-      margin-bottom: 20px;
-    }
+.lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 16px;
+}
 
-    .poster-grande {
-      width: 220px;
-      max-width: 40%;
-      height: auto;
-      object-fit: cover;
-      border-radius: 12px;
-    }
+.card {
+  background: #15151c;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid #25252e;
+  transition: 0.2s;
+}
 
-    .detalhes h1 {
-      margin-top: 0;
-      font-size: 28px;
-    }
+.card:hover {
+  transform: translateY(-4px);
+  border-color: #e50914;
+}
 
-    .generos {
-      color: #ccc;
-      margin: 10px 0;
-    }
+.card img {
+  width: 100%;
+  height: 225px;
+  object-fit: cover;
+  display: block;
+}
 
-    .sinopse {
-      line-height: 1.6;
-      color: #ddd;
-    }
+.card-info {
+  padding: 12px;
+}
 
-    .voltar {
-      background: #33333d;
-      margin-bottom: 20px;
-    }
+.card h3 {
+  margin: 0 0 7px;
+  font-size: 16px;
+}
 
-    .trailer {
-      margin-top: 25px;
-    }
+.nota {
+  color: #ffd000;
+  font-size: 14px;
+}
 
-    .trailer iframe {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      border: 0;
-      border-radius: 12px;
-    }
+.ano {
+  color: #999;
+  font-size: 13px;
+}
 
-    @media (max-width: 600px) {
-      .detalhes-topo {
-        flex-direction: column;
-      }
+.mensagem {
+  text-align: center;
+  color: #aaa;
+  padding: 30px;
+}
 
-      .poster-grande {
-        max-width: 220px;
-        width: 100%;
-        margin: auto;
-      }
+.detalhes {
+  display: none;
+}
 
-      .detalhes h1 {
-        font-size: 24px;
-      }
-    }
-  </style>
+.voltar {
+  background: #30303a;
+  color: white;
+  border: 0;
+  padding: 12px 18px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.detalhes-box {
+  display: flex;
+  gap: 25px;
+  background: #15151c;
+  padding: 20px;
+  border-radius: 15px;
+}
+
+.poster {
+  width: 260px;
+  height: 390px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.detalhes h1 {
+  margin-top: 0;
+  font-size: 32px;
+}
+
+.sinopse {
+  line-height: 1.7;
+  color: #ddd;
+}
+
+.generos {
+  color: #bbb;
+}
+
+.trailer {
+  margin-top: 25px;
+}
+
+.trailer iframe {
+  width: 100%;
+  max-width: 800px;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-radius: 12px;
+}
+
+@media(max-width:700px) {
+
+  .topo {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pesquisa-topo {
+    width: 100%;
+  }
+
+  .lista {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .card img {
+    height: 240px;
+  }
+
+  .detalhes-box {
+    flex-direction: column;
+  }
+
+  .poster {
+    width: 220px;
+    height: 330px;
+    margin: auto;
+  }
+
+}
+
+</style>
 </head>
 
 <body>
 
 <header>
-  <div class="logo">Cine<span>Fácil</span></div>
 
-  <div class="subtitulo">
-    Descubra filmes, informações e trailers
+  <div class="topo">
+
+    <div class="logo">
+      Cine<span>Fácil</span>
+    </div>
+
+    <div class="pesquisa-topo">
+
+      <input
+        id="pesquisa"
+        type="text"
+        placeholder="Pesquisar filmes..."
+        onkeydown="if(event.key === 'Enter') pesquisar()"
+      >
+
+      <button onclick="pesquisar()">
+        🔎
+      </button>
+
+    </div>
+
   </div>
+
 </header>
+
 
 <main>
 
-  <section id="telaPesquisa">
+<section id="inicio">
 
-    <h1>🔎 Pesquisar filmes</h1>
+  <h1>🎬 Descubra filmes</h1>
 
-    <input
-      id="pesquisa"
-      type="text"
-      placeholder="Digite o nome de um filme..."
-      onkeydown="if(event.key === 'Enter') buscar()"
-    >
-
-    <button onclick="buscar()">
-      Buscar
-    </button>
-
-    <div id="resultado"></div>
-
-  </section>
+  <p class="subtitulo">
+    Encontre filmes, veja informações e assista aos trailers.
+  </p>
 
 
-  <section id="telaDetalhes" class="detalhes">
+  <h2>🎭 Categorias</h2>
 
-    <button class="voltar" onclick="voltarPesquisa()">
-      ← Voltar para pesquisa
-    </button>
+  <div class="categorias">
 
-    <div id="conteudoDetalhes"></div>
+    <button onclick="genero(28)">Ação</button>
 
-  </section>
+    <button onclick="genero(12)">Aventura</button>
+
+    <button onclick="genero(35)">Comédia</button>
+
+    <button onclick="genero(27)">Terror</button>
+
+    <button onclick="genero(878)">Ficção</button>
+
+    <button onclick="genero(10749)">Romance</button>
+
+    <button onclick="genero(16)">Animação</button>
+
+  </div>
+
+
+  <h2>🔥 Filmes populares</h2>
+
+  <div id="populares" class="lista">
+    <div class="mensagem">
+      Carregando filmes...
+    </div>
+  </div>
+
+
+  <h2>⭐ Mais bem avaliados</h2>
+
+  <div id="avaliados" class="lista">
+    <div class="mensagem">
+      Carregando filmes...
+    </div>
+  </div>
+
+
+</section>
+
+
+<section id="resultados" style="display:none">
+
+  <button class="voltar" onclick="inicio()">
+    ← Voltar
+  </button>
+
+  <h2 id="tituloResultados">
+    Resultados
+  </h2>
+
+  <div id="listaResultados" class="lista"></div>
+
+</section>
+
+
+<section id="telaDetalhes" class="detalhes">
+
+  <button class="voltar" onclick="inicio()">
+    ← Voltar para início
+  </button>
+
+  <div id="conteudoDetalhes"></div>
+
+</section>
 
 </main>
 
@@ -231,114 +364,270 @@
 
 const API_KEY = "f4e2430e564ffb2d4128ed961cd4a78d";
 
-const URL_BASE = "https://api.themoviedb.org/3";
+const API =
+"https://api.themoviedb.org/3";
 
-const IMAGENS = "https://image.tmdb.org/t/p/w500";
+const IMAGEM =
+"https://image.tmdb.org/t/p/w500";
 
 
-async function buscar() {
+async function api(url) {
 
-  const texto = document
+  const resposta =
+    await fetch(url);
+
+  if (!resposta.ok) {
+    throw new Error("Erro na API");
+  }
+
+  return await resposta.json();
+}
+
+
+function criarCard(filme) {
+
+  const card =
+    document.createElement("div");
+
+  card.className = "card";
+
+  const poster =
+    filme.poster_path
+    ? IMAGEM + filme.poster_path
+    : "https://via.placeholder.com/500x750?text=Sem+poster";
+
+  const ano =
+    filme.release_date
+    ? filme.release_date.substring(0,4)
+    : "----";
+
+  const nota =
+    filme.vote_average
+    ? filme.vote_average.toFixed(1)
+    : "N/A";
+
+  card.innerHTML = `
+
+    <img
+      src="${poster}"
+      alt="${filme.title}"
+    >
+
+    <div class="card-info">
+
+      <h3>
+        ${filme.title}
+      </h3>
+
+      <div class="ano">
+        📅 ${ano}
+      </div>
+
+      <div class="nota">
+        ⭐ ${nota}
+      </div>
+
+    </div>
+
+  `;
+
+  card.onclick =
+    () => abrirDetalhes(filme.id);
+
+  return card;
+
+}
+
+
+async function carregarInicio() {
+
+  try {
+
+    const populares =
+      await api(
+        API +
+        "/movie/popular" +
+        "?api_key=" +
+        API_KEY +
+        "&language=pt-BR"
+      );
+
+    const avaliados =
+      await api(
+        API +
+        "/movie/top_rated" +
+        "?api_key=" +
+        API_KEY +
+        "&language=pt-BR"
+      );
+
+
+    const divPopulares =
+      document.getElementById("populares");
+
+    const divAvaliados =
+      document.getElementById("avaliados");
+
+
+    divPopulares.innerHTML = "";
+
+    divAvaliados.innerHTML = "";
+
+
+    populares.results
+      .slice(0,10)
+      .forEach(filme => {
+
+        divPopulares.appendChild(
+          criarCard(filme)
+        );
+
+      });
+
+
+    avaliados.results
+      .slice(0,10)
+      .forEach(filme => {
+
+        divAvaliados.appendChild(
+          criarCard(filme)
+        );
+
+      });
+
+  }
+
+  catch(erro) {
+
+    console.error(erro);
+
+    document.getElementById("populares")
+      .innerHTML =
+      "<div class='mensagem'>Não foi possível carregar os filmes.</div>";
+
+  }
+
+}
+
+
+async function pesquisar() {
+
+  const texto =
+    document
     .getElementById("pesquisa")
     .value
     .trim();
 
-  const resultado = document.getElementById("resultado");
+  if(!texto) return;
 
-  if (!texto) {
-    resultado.innerHTML =
-      "<p class='erro'>Digite o nome de um filme.</p>";
-    return;
-  }
+  mostrarResultados();
 
-  resultado.innerHTML =
-    "<p class='carregando'>🔎 Pesquisando filmes...</p>";
+  document.getElementById("tituloResultados")
+    .textContent =
+    "🔎 Resultados para: " + texto;
+
+  const lista =
+    document.getElementById("listaResultados");
+
+  lista.innerHTML =
+    "<div class='mensagem'>Pesquisando...</div>";
+
 
   try {
 
-    const url =
-      URL_BASE +
-      "/search/movie" +
-      "?api_key=" + API_KEY +
-      "&language=pt-BR" +
-      "&query=" + encodeURIComponent(texto);
+    const dados =
+      await api(
+        API +
+        "/search/movie" +
+        "?api_key=" +
+        API_KEY +
+        "&language=pt-BR" +
+        "&query=" +
+        encodeURIComponent(texto)
+      );
 
-    const resposta = await fetch(url);
 
-    if (!resposta.ok) {
-      throw new Error("Erro na API");
-    }
+    lista.innerHTML = "";
 
-    const dados = await resposta.json();
 
-    if (!dados.results || dados.results.length === 0) {
+    if(!dados.results.length) {
 
-      resultado.innerHTML =
-        "<p class='erro'>Nenhum filme encontrado.</p>";
+      lista.innerHTML =
+        "<div class='mensagem'>Nenhum filme encontrado.</div>";
 
       return;
+
     }
 
-    resultado.innerHTML = "";
 
-    dados.results.forEach(function(filme) {
+    dados.results.forEach(filme => {
 
-      const ano = filme.release_date
-        ? filme.release_date.substring(0, 4)
-        : "Ano desconhecido";
-
-      const nota = filme.vote_average
-        ? filme.vote_average.toFixed(1)
-        : "Sem nota";
-
-      const poster = filme.poster_path
-        ? IMAGENS + filme.poster_path
-        : "";
-
-      const elemento = document.createElement("div");
-
-      elemento.className = "filme";
-
-      elemento.innerHTML = `
-
-        ${
-          poster
-          ? `<img src="${poster}" alt="${filme.title}">`
-          : ""
-        }
-
-        <div>
-
-          <h2>🎬 ${filme.title}</h2>
-
-          <p>📅 ${ano}</p>
-
-          <p class="nota">
-            ⭐ ${nota}
-          </p>
-
-          <p>
-            ${filme.overview || "Sinopse não disponível."}
-          </p>
-
-        </div>
-
-      `;
-
-      elemento.onclick = function() {
-        abrirDetalhes(filme.id);
-      };
-
-      resultado.appendChild(elemento);
+      lista.appendChild(
+        criarCard(filme)
+      );
 
     });
 
-  } catch (erro) {
+  }
 
-    console.error(erro);
+  catch(erro) {
 
-    resultado.innerHTML =
-      "<p class='erro'>Não foi possível pesquisar os filmes.</p>";
+    lista.innerHTML =
+      "<div class='mensagem'>Erro ao pesquisar.</div>";
+
+  }
+
+}
+
+
+async function genero(id) {
+
+  mostrarResultados();
+
+  document.getElementById("tituloResultados")
+    .textContent =
+    "🎭 Filmes da categoria";
+
+
+  const lista =
+    document.getElementById("listaResultados");
+
+  lista.innerHTML =
+    "<div class='mensagem'>Carregando...</div>";
+
+
+  try {
+
+    const dados =
+      await api(
+        API +
+        "/discover/movie" +
+        "?api_key=" +
+        API_KEY +
+        "&language=pt-BR" +
+        "&with_genres=" +
+        id +
+        "&sort_by=popularity.desc"
+      );
+
+
+    lista.innerHTML = "";
+
+
+    dados.results.forEach(filme => {
+
+      lista.appendChild(
+        criarCard(filme)
+      );
+
+    });
+
+  }
+
+  catch(erro) {
+
+    lista.innerHTML =
+      "<div class='mensagem'>Erro ao carregar categoria.</div>";
 
   }
 
@@ -347,165 +636,175 @@ async function buscar() {
 
 async function abrirDetalhes(id) {
 
-  const telaPesquisa =
-    document.getElementById("telaPesquisa");
+  document.getElementById("inicio")
+    .style.display = "none";
 
-  const telaDetalhes =
-    document.getElementById("telaDetalhes");
+  document.getElementById("resultados")
+    .style.display = "none";
+
+  document.getElementById("telaDetalhes")
+    .style.display = "block";
+
 
   const conteudo =
     document.getElementById("conteudoDetalhes");
 
-  telaPesquisa.style.display = "none";
-
-  telaDetalhes.style.display = "block";
-
   conteudo.innerHTML =
-    "<p class='carregando'>🎬 Carregando informações...</p>";
+    "<div class='mensagem'>Carregando informações...</div>";
+
 
   try {
 
-    const url =
-      URL_BASE +
-      "/movie/" +
-      id +
-      "?api_key=" +
-      API_KEY +
-      "&language=pt-BR";
-
-    const resposta =
-      await fetch(url);
-
-    if (!resposta.ok) {
-      throw new Error("Erro ao carregar filme");
-    }
-
     const filme =
-      await resposta.json();
+      await api(
+        API +
+        "/movie/" +
+        id +
+        "?api_key=" +
+        API_KEY +
+        "&language=pt-BR"
+      );
+
 
     const poster =
       filme.poster_path
-      ? IMAGENS + filme.poster_path
+      ? IMAGEM + filme.poster_path
       : "";
 
-    const ano =
-      filme.release_date
-      ? filme.release_date.substring(0, 4)
-      : "Ano desconhecido";
-
-    const nota =
-      filme.vote_average
-      ? filme.vote_average.toFixed(1)
-      : "Sem nota";
 
     const generos =
-      filme.genres && filme.genres.length
-      ? filme.genres.map(g => g.name).join(" • ")
-      : "Não informado";
+      filme.genres
+      ? filme.genres
+          .map(g => g.name)
+          .join(" • ")
+      : "";
+
 
     conteudo.innerHTML = `
 
-      <div class="detalhes-topo">
+      <div class="detalhes-box">
 
         ${
           poster
-          ? `<img
-              class="poster-grande"
-              src="${poster}"
-              alt="${filme.title}"
-            >`
+          ? `
+          <img
+            class="poster"
+            src="${poster}"
+            alt="${filme.title}"
+          >
+          `
           : ""
         }
 
+
         <div>
 
-          <h1>${filme.title}</h1>
+          <h1>
+            ${filme.title}
+          </h1>
 
-          <p>📅 ${ano}</p>
+          <p>
+            📅 ${
+              filme.release_date
+              ? filme.release_date.substring(0,4)
+              : "----"
+            }
+          </p>
 
           <p class="nota">
-            ⭐ ${nota}
+            ⭐ ${
+              filme.vote_average
+              ? filme.vote_average.toFixed(1)
+              : "N/A"
+            }
           </p>
 
           <p class="generos">
             🎭 ${generos}
           </p>
 
+          <h2>
+            📖 Sinopse
+          </h2>
+
+          <p class="sinopse">
+            ${
+              filme.overview ||
+              "Sinopse não disponível."
+            }
+          </p>
+
         </div>
 
       </div>
 
-      <h2>📖 Sinopse</h2>
-
-      <p class="sinopse">
-        ${
-          filme.overview ||
-          "Sinopse não disponível."
-        }
-      </p>
-
-      <div id="areaTrailer"></div>
+      <div id="trailerArea"></div>
 
     `;
 
-    buscarTrailer(id);
 
-  } catch (erro) {
+    carregarTrailer(id);
 
-    console.error(erro);
+  }
+
+  catch(erro) {
 
     conteudo.innerHTML =
-      "<p class='erro'>Não foi possível carregar os detalhes.</p>";
+      "<div class='mensagem'>Não foi possível carregar o filme.</div>";
 
   }
 
 }
 
 
-async function buscarTrailer(id) {
+async function carregarTrailer(id) {
 
   const area =
-    document.getElementById("areaTrailer");
+    document.getElementById("trailerArea");
+
 
   try {
 
-    const url =
-      URL_BASE +
-      "/movie/" +
-      id +
-      "/videos" +
-      "?api_key=" +
-      API_KEY +
-      "&language=pt-BR";
-
-    const resposta =
-      await fetch(url);
-
     const dados =
-      await resposta.json();
+      await api(
+        API +
+        "/movie/" +
+        id +
+        "/videos" +
+        "?api_key=" +
+        API_KEY +
+        "&language=pt-BR"
+      );
+
 
     let trailer =
-      dados.results.find(video =>
+      dados.results.find(
+        video =>
         video.site === "YouTube" &&
         video.type === "Trailer"
       );
 
-    if (!trailer) {
+
+    if(!trailer) {
 
       trailer =
-        dados.results.find(video =>
+        dados.results.find(
+          video =>
           video.site === "YouTube"
         );
 
     }
 
-    if (trailer) {
+
+    if(trailer) {
 
       area.innerHTML = `
 
         <div class="trailer">
 
-          <h2>▶️ Trailer</h2>
+          <h2>
+            ▶️ Trailer
+          </h2>
 
           <iframe
             src="https://www.youtube.com/embed/${trailer.key}"
@@ -516,17 +815,11 @@ async function buscarTrailer(id) {
 
       `;
 
-    } else {
-
-      area.innerHTML = `
-        <p class="generos">
-          🎞️ Trailer não disponível.
-        </p>
-      `;
-
     }
 
-  } catch (erro) {
+  }
+
+  catch(erro) {
 
     console.error(erro);
 
@@ -535,15 +828,35 @@ async function buscarTrailer(id) {
 }
 
 
-function voltarPesquisa() {
+function mostrarResultados() {
+
+  document.getElementById("inicio")
+    .style.display = "none";
 
   document.getElementById("telaDetalhes")
     .style.display = "none";
 
-  document.getElementById("telaPesquisa")
+  document.getElementById("resultados")
     .style.display = "block";
 
 }
+
+
+function inicio() {
+
+  document.getElementById("resultados")
+    .style.display = "none";
+
+  document.getElementById("telaDetalhes")
+    .style.display = "none";
+
+  document.getElementById("inicio")
+    .style.display = "block";
+
+}
+
+
+carregarInicio();
 
 </script>
 
