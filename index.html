@@ -103,6 +103,7 @@ h2 {
   border: 1px solid #333;
   padding: 10px 15px;
   border-radius: 20px;
+  cursor: pointer;
 }
 
 .categorias button:hover {
@@ -172,6 +173,7 @@ h2 {
   padding: 12px 18px;
   border-radius: 8px;
   margin-bottom: 20px;
+  cursor: pointer;
 }
 
 .detalhes-box {
@@ -215,6 +217,127 @@ h2 {
   border-radius: 12px;
 }
 
+
+/* ============================= */
+/* ÁREA ASSISTIR */
+/* ============================= */
+
+.assistir-box {
+  background: #15151c;
+  border: 1px solid #25252e;
+  border-radius: 15px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.m3u-form {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.m3u-form input {
+  flex: 1;
+  padding: 14px;
+  background: #1b1b23;
+  color: white;
+  border: 1px solid #444;
+  border-radius: 8px;
+  outline: none;
+}
+
+.m3u-form button {
+  padding: 14px 20px;
+  background: #e50914;
+  color: white;
+  border: 0;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.m3u-form button:hover {
+  background: #ff202b;
+}
+
+.player-area {
+  display: none;
+  margin-top: 25px;
+  background: #000;
+  padding: 15px;
+  border-radius: 15px;
+}
+
+.player-area h2 {
+  margin-top: 0;
+}
+
+#playerM3U {
+  width: 100%;
+  max-width: 900px;
+  display: block;
+  margin: auto;
+  background: #000;
+  border-radius: 10px;
+}
+
+.fechar-player {
+  background: #30303a;
+  color: white;
+  border: 0;
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  cursor: pointer;
+}
+
+.m3u-card {
+  background: #15151c;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid #25252e;
+  transition: 0.2s;
+}
+
+.m3u-card:hover {
+  transform: translateY(-4px);
+  border-color: #e50914;
+}
+
+.m3u-card img {
+  width: 100%;
+  height: 210px;
+  object-fit: cover;
+  display: block;
+  background: #202028;
+}
+
+.m3u-card-info {
+  padding: 12px;
+}
+
+.m3u-card h3 {
+  margin: 0 0 7px;
+  font-size: 15px;
+}
+
+.m3u-grupo {
+  color: #999;
+  font-size: 13px;
+}
+
+.assistir-status {
+  color: #aaa;
+  margin-top: 15px;
+  text-align: center;
+}
+
+
+/* ============================= */
+/* RESPONSIVO */
+/* ============================= */
+
 @media(max-width:700px) {
 
   .topo {
@@ -242,6 +365,18 @@ h2 {
     width: 220px;
     height: 330px;
     margin: auto;
+  }
+
+  .m3u-form {
+    flex-direction: column;
+  }
+
+  .m3u-form button {
+    width: 100%;
+  }
+
+  .m3u-card img {
+    height: 220px;
   }
 
 }
@@ -326,6 +461,70 @@ h2 {
     <div class="mensagem">
       Carregando filmes...
     </div>
+  </div>
+
+
+  <!-- ============================= -->
+  <!-- NOVA ÁREA ASSISTIR -->
+  <!-- ============================= -->
+
+  <h2>🎬 Assistir</h2>
+
+  <div class="assistir-box">
+
+    <p class="subtitulo">
+      Carregue uma playlist M3U autorizada para visualizar seus conteúdos.
+    </p>
+
+    <div class="m3u-form">
+
+      <input
+        id="urlM3U"
+        type="url"
+        placeholder="Cole aqui o link da playlist M3U..."
+      >
+
+      <button onclick="carregarM3U()">
+        ▶️ Carregar
+      </button>
+
+    </div>
+
+    <div
+      id="statusM3U"
+      class="assistir-status">
+    </div>
+
+  </div>
+
+
+  <div
+    id="playerArea"
+    class="player-area">
+
+    <button
+      class="fechar-player"
+      onclick="fecharPlayer()">
+      ✕ Fechar player
+    </button>
+
+    <h2 id="nomePlayer">
+      ▶️ Reproduzindo
+    </h2>
+
+    <video
+      id="playerM3U"
+      controls
+      playsinline>
+    </video>
+
+  </div>
+
+
+  <div
+    id="listaM3U"
+    class="lista"
+    style="margin-top:25px;">
   </div>
 
 
@@ -790,7 +989,7 @@ async function carregarTrailer(id) {
       trailer =
         dados.results.find(
           video =>
-          video.site === "YouTube"
+            video.site === "YouTube"
         );
 
     }
@@ -826,6 +1025,337 @@ async function carregarTrailer(id) {
   }
 
 }
+
+
+/* ============================= */
+/* FUNÇÕES DA ÁREA ASSISTIR */
+/* ============================= */
+
+
+async function carregarM3U() {
+
+  const campo =
+    document.getElementById("urlM3U");
+
+  const url =
+    campo.value.trim();
+
+  const lista =
+    document.getElementById("listaM3U");
+
+  const status =
+    document.getElementById("statusM3U");
+
+
+  if(!url) {
+
+    status.textContent =
+      "⚠️ Cole primeiro o endereço da playlist M3U.";
+
+    return;
+
+  }
+
+
+  status.textContent =
+    "⏳ Carregando playlist...";
+
+  lista.innerHTML = "";
+
+
+  try {
+
+    const resposta =
+      await fetch(url);
+
+
+    if(!resposta.ok) {
+
+      throw new Error(
+        "Não foi possível acessar a playlist."
+      );
+
+    }
+
+
+    const texto =
+      await resposta.text();
+
+
+    const itens =
+      interpretarM3U(texto);
+
+
+    if(!itens.length) {
+
+      status.textContent =
+        "⚠️ A playlist foi acessada, mas nenhum item foi encontrado.";
+
+      return;
+
+    }
+
+
+    status.textContent =
+      "✅ " +
+      itens.length +
+      " itens encontrados.";
+
+
+    itens.forEach(item => {
+
+      const card =
+        document.createElement("div");
+
+      card.className =
+        "m3u-card";
+
+
+      const imagem =
+        item.logo ||
+        "https://via.placeholder.com/500x750?text=CineFacil";
+
+
+      card.innerHTML = `
+
+        <img
+          src="${imagem}"
+          alt="${item.nome}"
+          onerror="
+            this.src='https://via.placeholder.com/500x750?text=CineFacil'
+          "
+        >
+
+        <div class="m3u-card-info">
+
+          <h3>
+            ${item.nome}
+          </h3>
+
+          <div class="m3u-grupo">
+            📁 ${item.grupo || "Sem categoria"}
+          </div>
+
+        </div>
+
+      `;
+
+
+      card.onclick =
+        () => abrirPlayer(item);
+
+
+      lista.appendChild(card);
+
+    });
+
+  }
+
+  catch(erro) {
+
+    console.error(erro);
+
+
+    status.innerHTML = `
+      ❌ Não foi possível carregar a playlist.
+      <br><br>
+      O servidor pode não permitir acesso pelo navegador
+      ou pode exigir outro tipo de conexão.
+    `;
+
+  }
+
+}
+
+
+/* Interpreta o formato M3U */
+
+function interpretarM3U(texto) {
+
+  const linhas =
+    texto.split(/\r?\n/);
+
+  const itens = [];
+
+  let info = null;
+
+
+  for(let i = 0; i < linhas.length; i++) {
+
+    const linha =
+      linhas[i].trim();
+
+
+    if(!linha) {
+      continue;
+    }
+
+
+    if(linha.startsWith("#EXTINF")) {
+
+      const posicaoVirgula =
+        linha.lastIndexOf(",");
+
+
+      let nome =
+        posicaoVirgula >= 0
+        ? linha.substring(posicaoVirgula + 1).trim()
+        : "Sem nome";
+
+
+      const logoEncontrado =
+        linha.match(
+          /tvg-logo="([^"]*)"/i
+        );
+
+
+      const grupoEncontrado =
+        linha.match(
+          /group-title="([^"]*)"/i
+        );
+
+
+      info = {
+
+        nome:
+          nome,
+
+        logo:
+          logoEncontrado
+          ? logoEncontrado[1]
+          : "",
+
+        grupo:
+          grupoEncontrado
+          ? grupoEncontrado[1]
+          : "Sem categoria"
+
+      };
+
+
+      continue;
+
+    }
+
+
+    if(linha.startsWith("#")) {
+      continue;
+    }
+
+
+    if(
+      info &&
+      (
+        linha.startsWith("http://") ||
+        linha.startsWith("https://")
+      )
+    ) {
+
+      itens.push({
+
+        nome:
+          info.nome,
+
+        logo:
+          info.logo,
+
+        grupo:
+          info.grupo,
+
+        url:
+          linha
+
+      });
+
+
+      info = null;
+
+    }
+
+  }
+
+
+  return itens;
+
+}
+
+
+/* Abre o player */
+
+function abrirPlayer(item) {
+
+  const area =
+    document.getElementById("playerArea");
+
+  const player =
+    document.getElementById("playerM3U");
+
+  const nome =
+    document.getElementById("nomePlayer");
+
+
+  nome.textContent =
+    "▶️ " + item.nome;
+
+
+  area.style.display =
+    "block";
+
+
+  player.pause();
+
+
+  player.src =
+    item.url;
+
+
+  player.load();
+
+
+  player.play()
+    .catch(() => {
+
+      console.log(
+        "O navegador aguardará o usuário apertar play."
+      );
+
+    });
+
+
+  area.scrollIntoView({
+    behavior: "smooth"
+  });
+
+}
+
+
+/* Fecha o player */
+
+function fecharPlayer() {
+
+  const area =
+    document.getElementById("playerArea");
+
+  const player =
+    document.getElementById("playerM3U");
+
+
+  player.pause();
+
+  player.removeAttribute("src");
+
+  player.load();
+
+
+  area.style.display =
+    "none";
+
+}
+
+
+/* ============================= */
+/* NAVEGAÇÃO */
+/* ============================= */
 
 
 function mostrarResultados() {
