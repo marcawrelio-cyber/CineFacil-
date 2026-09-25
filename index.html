@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>CineFacil</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #0b0b0f;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    header {
+      padding: 25px 20px;
+      text-align: center;
+      background: #111116;
+      border-bottom: 1px solid #24242c;
+    }
+
+    .logo {
+      font-size: 32px;
+      font-weight: bold;
+    }
+
+    .logo span {
+      color: #e50914;
+    }
+
+    .subtitulo {
+      margin-top: 8px;
+      color: #aaa;
+      font-size: 14px;
+    }
+
+    .container {
+      padding: 25px 18px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .titulo {
+      font-size: 24px;
+      margin-bottom: 18px;
+    }
+
+    .destaque {
+      background: linear-gradient(135deg, #1d1d25, #101014);
+      border-radius: 18px;
+      padding: 25px;
+      margin-bottom: 25px;
+      border: 1px solid #292933;
+    }
+
+    .destaque h2 {
+      font-size: 26px;
+      margin-bottom: 10px;
+    }
+
+    .destaque p {
+      color: #bbb;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    button {
+      background: #e50914;
+      color: white;
+      border: none;
+      padding: 13px 22px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.85;
+    }
+
+    .categorias {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      margin-bottom: 25px;
+    }
+
+    .categoria {
+      background: #19191f;
+      border: 1px solid #292933;
+      padding: 10px 16px;
+      border-radius: 20px;
+      white-space: nowrap;
+      color: #ddd;
+    }
+
+    .rodape {
+      text-align: center;
+      color: #666;
+      padding: 40px 20px;
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">Cine<span>Facil</span></div>
+    <div class="subtitulo">
+      Descubra filmes, informações e trailers
+    </div>
+  </header>
+
+  <main class="container">
+
+    <h1 class="titulo">Olá! 🎬</h1>
+
+    <div class="destaque">
+      <h2>Encontre seu próximo filme</h2>
+
+      <p>
+        Pesquise filmes, veja informações, descubra novidades
+        e encontre trailers para assistir.
+      </p>
+
+      <button onclick="alert('Em breve: busca de filmes!')">
+        🔎 Buscar filmes
+      </button>
+    </div>
+
+    <h2 class="titulo">Categorias</h2>
+
+    <div class="categorias">
+      <div class="categoria">🎬 Ação</div>
+      <div class="categoria">😂 Comédia</div>
+      <div class="categoria">👻 Terror</div>
+      <div class="categoria">❤️ Romance</div>
+      <div class="categoria">🚀 Ficção</div>
+    </div>
+
+  </main>
+
+  <div class="rodape">
+    CineFacil © 2026
+  </div>
+
+</body>
+</html>
